@@ -1,108 +1,84 @@
-import numpy as np
-import string
-
-# def main():
-#     template = initialize()
-#     show_plain(template)
-#     input_gracza()
-#
-# def show_plain(template):
-#     for i in range(3):
-#         for j in range(3):
-#             print(template[i][j], end='')
-#         print(' ')
-#
-# def initialize():
-#     template = [['x' for i in range(3)] for i in range(3)]
-#     return template
-#
-# def input_gracza():
-#     print("Tura X")
-#     choice = input("wybierz pole: ")
-#     print(choice)
-
-# def main():
-#     template = initialize()
-#     show_plain(template)
-#     input_gracza(template)
-#
-# def show_plain(template):
-#     for x in range(3):
-#         for y in range(3):
-#             print(template[0], end='')
-#         print(' ')
-#
-# def initialize():
-#     template = [9]
-#     return template
-#
-# def input_gracza():
-#     print("Tura X")
-#     choice = input("wybierz pole (od 1 do 9): ")
-#     choice = int(choice)
-#     # template.pop(choice)
-#     # template.insert(choice, 'x')
-#     return choice
-
-
-# def input_gracza_2():
-#
-# def whowon():
-#
-# def zabezpieczenie():
-#
-# def zmianagracza():
-
 board = ['_'] * 9
 
 def main():
-    while whowon != 0:
-        print_board
+    print_board()
+    while victorycheck() == 0 and board_check():
         player_a()
+        if victorycheck() != 0:
+            break
         player_b()
         victorycheck()
-    print("Wygrał: " + victorycheck)
+    whowon(victorycheck)
+    if not board_check():
+        print("Remis")
+    # Tutaj chyba jest trochę bałagan.
 
 def print_board():
     print(board[0] + '|' + board[1] + '|' + board[2])
     print(board[3] + '|' + board[4] + '|' + board[5])
     print(board[6] + '|' + board[7] + '|' + board[8])
+    # Przyznaję zajebane z neta.
 
 def player_a():
     print("TURA X")
-    x = input('Pick a number from 1-9')
+    x = input('Wybierz pole od 1 do 9')
     x = int(x) - 1
     if board[x] != 'O':
         board[x] = 'X'
         print_board()
     else:
         print("Pole już zajęte, tracisz turę")
+    # Pewnie gdyby zrobić osobną funkcję do kontroli pola byłoby lepiej,
+    # ale tak wymyśliłem najpierw i działało, więc nie zmieniałem.
 
 def player_b():
     print("TURA Y")
-    o = input('Pick a number from 1-9')
+    o = input('Wybierz pole od 1 do 9')
     o = int(o) - 1
     if board[o] != 'X':
         board[o] = 'O'
         print_board()
     else:
         print("Pole już zajęte, tracisz turę")
+    # j.w.
 
 def victorycheck():
-    if board[0] == 'X' and board[1] == 'X' and board[2] == 'X':
-        return 1
-    if board[3] == board[4] == board[5]:
+    if board[0] == board[1] == board[2] != '_':
+        return board[0]
+    if board[3] == board[4] == board[5] != '_':
         return board[3]
-    if board[6] == board[7] == board[8]:
+    if board[6] == board[7] == board[8] != '_':
         return board[6]
+    # horizontal check
+    if board[0] == board[3] == board[6] != '_':
+        return board[0]
+    if board[1] == board[4] == board[7] != '_':
+        return board[1]
+    if board[2] == board[5] == board[8] != '_':
+        return board[8]
+    # vertical check
+    if board[0] == board[4] == board[8] != '_':
+        return board[0]
+    if board[2] == board[4] == board[6] != '_':
+        return board[2]
+    # diagonal check
     else:
         return 0
+    # Masakrycznie młotkowa metoda, na pewno da się to zrobić mniej barbarzyńsko. Niestety, tylko na to wpadłem.
+
 def whowon(victorycheck):
 
     if victorycheck != 0:
-        return victorycheck
+        print("Wygrywa: ")
+        print(victorycheck())
     else:
         return 0
+    # Da się na pewno w jednej linii, ale konkatenacja mi nie wychodziła i trochę mam to w zadzie.
 
+def board_check():
+
+    while '_' in board:
+        return True
+    # To też dosyć mało eleganckie chyba, ale działa.
 
 main()
